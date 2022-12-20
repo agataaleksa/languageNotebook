@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.aleksa.langunotebook.controller.dto.Mapper;
 import com.aleksa.langunotebook.controller.dto.request.WordRequestDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.WordResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
 import com.aleksa.langunotebook.dao.entity.WordEntity;
 import com.aleksa.langunotebook.exception.WordNotFoundException;
 import com.aleksa.langunotebook.repository.WordRepository;

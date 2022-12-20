@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aleksa.langunotebook.controller.dto.request.TranslationRequestDTO;
+import com.aleksa.langunotebook.controller.dto.request.TranslationUpdateRequestDTO;
 import com.aleksa.langunotebook.controller.dto.request.EntireTranslationRequestDTO;
 import com.aleksa.langunotebook.controller.dto.request.WordRequestDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.TranslationResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.EntireTranslationResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.ExampleResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.WordResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.EntireTranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.ExampleResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
 import com.aleksa.langunotebook.dao.entity.TranslationEntity;
 import com.aleksa.langunotebook.controller.dto.Mapper;
 import com.aleksa.langunotebook.repository.ExampleRepository;
@@ -52,28 +53,28 @@ public class TranslationController {
 	}
 	
 	@PostMapping("/add")
-    public EntireTranslationResponseDTO addEntireTranslation(@Valid @RequestBody final EntireTranslationRequestDTO requestDTO) {
-		return translationService.addEntireTranslation(requestDTO);
+    public ResponseEntity<EntireTranslationResponseDTO> addEntireTranslation(@Valid @RequestBody final EntireTranslationRequestDTO requestDTO) {
+		return new ResponseEntity<>(translationService.addEntireTranslation(requestDTO),HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/addMeaning")
-	public TranslationResponseDTO addTranslationToExistingWord(@Valid @RequestBody final TranslationRequestDTO requestDTO) {
-		return translationService.addTranslation(requestDTO);
+	public ResponseEntity<TranslationResponseDTO> addTranslationToExistingWord(@Valid @RequestBody final TranslationRequestDTO requestDTO) {
+		return new ResponseEntity<>(translationService.addTranslation(requestDTO), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/all")
-	public List<TranslationResponseDTO> getTranslations() {
-		return translationService.getTranslations();
+	public ResponseEntity<List<TranslationResponseDTO>> getTranslations() {
+		return new ResponseEntity<>(translationService.getTranslations(), HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/{id}")
-	public TranslationResponseDTO getTranslactionById(@Valid @PathVariable Long id) {
-		return translationService.getTranslactionById(id);
+	public ResponseEntity<TranslationResponseDTO> getTranslactionById(@Valid @PathVariable Long id) {
+		return new ResponseEntity<>(translationService.getTranslactionById(id), HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/{word}")
-	public List<TranslationResponseDTO> getTranslationsByWord(@Valid @PathVariable String word) {
-		return translationService.getTranslationsByWord(word);
+	public ResponseEntity<List<TranslationResponseDTO>> getTranslationsByWord(@Valid @PathVariable String word) {
+		return new ResponseEntity<>(translationService.getTranslationsByWord(word), HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -81,6 +82,13 @@ public class TranslationController {
 		translationService.deleteTranslation(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@PutMapping("/{translation_id}")
+	public ResponseEntity<Void> updateTranslation(@Valid @PathVariable Long translation_id, @Valid @RequestBody final TranslationUpdateRequestDTO requestDTO) {
+		translationService.updateTranslation(translation_id, requestDTO);
+		return ResponseEntity.ok().build();
+	}
+	
 	
 }
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.aleksa.langunotebook.controller.dto.request.WordRequestDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.WordResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
 import com.aleksa.langunotebook.dao.entity.WordEntity;
 
 @Service

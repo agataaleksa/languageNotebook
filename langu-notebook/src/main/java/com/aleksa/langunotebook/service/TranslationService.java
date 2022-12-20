@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 
 import com.aleksa.langunotebook.controller.dto.request.EntireTranslationRequestDTO;
 import com.aleksa.langunotebook.controller.dto.request.TranslationRequestDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.EntireTranslationResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.TranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.request.TranslationUpdateRequestDTO;
+import com.aleksa.langunotebook.controller.dto.response.EntireTranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTO;
 import com.aleksa.langunotebook.dao.entity.TranslationEntity;
 
 @Service
 public interface TranslationService {
-	
 
 	public TranslationEntity getTranslation(Long id);
 	public TranslationResponseDTO getTranslactionById(Long id);
@@ -23,5 +23,6 @@ public interface TranslationService {
     public TranslationResponseDTO deleteExampleFromTranslation(Long translation_id);      
     public EntireTranslationResponseDTO addEntireTranslation(EntireTranslationRequestDTO requestDTO);
 	List<TranslationResponseDTO> getTranslationsByWord(String word);
+	public void updateTranslation (Long translation_id, TranslationUpdateRequestDTO requestDTO);
     
 }

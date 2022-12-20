@@ -19,7 +19,6 @@ public class TranslationRequestDTO {
 	@Size(max = 200)
 	private ExampleEntity example;
 	@NotNull(message = "Field cannot be null.")
-	@NotBlank(message = "Field cannot be null.")
 	private Long word_id;
 
 	

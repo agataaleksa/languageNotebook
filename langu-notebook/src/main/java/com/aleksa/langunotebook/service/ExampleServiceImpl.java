@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 import com.aleksa.langunotebook.controller.dto.Mapper;
-import com.aleksa.langunotebook.controller.dto.request.response.ExampleResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.ExampleResponseDTO;
 import com.aleksa.langunotebook.dao.entity.ExampleEntity;
 import com.aleksa.langunotebook.repository.ExampleRepository;
 

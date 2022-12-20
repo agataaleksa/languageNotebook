@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import com.aleksa.langunotebook.controller.dto.Mapper;
 import com.aleksa.langunotebook.controller.dto.request.EntireTranslationRequestDTO;
 import com.aleksa.langunotebook.controller.dto.request.TranslationRequestDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.EntireTranslationResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.TranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.request.TranslationUpdateRequestDTO;
+import com.aleksa.langunotebook.controller.dto.response.EntireTranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTO;
 import com.aleksa.langunotebook.dao.entity.ExampleEntity;
 import com.aleksa.langunotebook.dao.entity.WordEntity;
 import com.aleksa.langunotebook.dao.entity.TranslationEntity;
@@ -119,6 +120,13 @@ public class TranslationServiceImpl implements TranslationService
 		TranslationEntity translation = getTranslation(id);
 		translation.setExample(null);    
 	    return Mapper.translationToTranslationDTO(translation);
+	}
+
+	public void updateTranslation (Long translation_id, TranslationUpdateRequestDTO requestDTO) {
+		TranslationEntity translation = getTranslation(translation_id);
+	    translation.setTranslation(requestDTO.getTranslation());
+		translation.setDescription(requestDTO.getDescription());
+		translationRepository.save(translation);
 	}
 
 	

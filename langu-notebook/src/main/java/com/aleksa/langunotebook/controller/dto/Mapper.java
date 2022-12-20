@@ -2,10 +2,11 @@ package com.aleksa.langunotebook.controller.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.aleksa.langunotebook.controller.dto.request.response.ExampleResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.TranslationResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.EntireTranslationResponseDTO;
-import com.aleksa.langunotebook.controller.dto.request.response.WordResponseDTO;
+
+import com.aleksa.langunotebook.controller.dto.response.EntireTranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.ExampleResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
 import com.aleksa.langunotebook.dao.entity.ExampleEntity;
 import com.aleksa.langunotebook.dao.entity.TranslationEntity;
 import com.aleksa.langunotebook.dao.entity.WordEntity;

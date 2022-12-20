@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.aleksa.langunotebook.controller.dto.request.response.ExampleResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.ExampleResponseDTO;
 import com.aleksa.langunotebook.dao.entity.ExampleEntity;
 
 @Service
