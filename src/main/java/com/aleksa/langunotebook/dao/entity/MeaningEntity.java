@@ -29,12 +29,12 @@ public class MeaningEntity {
 	
 	public MeaningEntity() {}
 
-	public MeaningEntity(String meaning, String description, ExampleEntity example, WordEntity word) {
-		this.meaning = meaning;
-		this.description = description;
-		this.example = example;
-		this.word = word;
-	}
+	private MeaningEntity(Builder builder) {
+        this.meaning = builder.meaning;
+        this.description = builder.description;
+        this.example = builder.example;
+        this.word = builder.word;
+    }
 
 	public Long getId() {
 		return id;
@@ -80,4 +80,57 @@ public class MeaningEntity {
 		this.version = version;
 	}
 	
+	public static Builder builder(String meaning, String description) {
+        return new Builder(meaning, description);
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static class Builder {
+
+        private String meaning;
+        private String description;
+        private ExampleEntity example;
+        private WordEntity word;
+
+        private Builder(String meaning, String description) {
+            this.meaning = meaning;
+            this.description = description;
+        }
+
+        private Builder(MeaningEntity meaningEntity) {
+            this.meaning = meaningEntity.getMeaning();
+            this.description = meaningEntity.getDescription();
+            this.example = meaningEntity.getExample();
+            this.word = meaningEntity.getWord();
+        }
+
+        public Builder meaning(String meaning) {
+            this.meaning = meaning;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder example(ExampleEntity example) {
+            this.example = example;
+            return this;
+        }
+
+        public Builder word(WordEntity word) {
+            this.word = word;
+            return this;
+        }
+
+        public MeaningEntity build() {
+            return new MeaningEntity(this);
+        }
+
+    }
+
 }

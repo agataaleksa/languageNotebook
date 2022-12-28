@@ -26,10 +26,10 @@ public class WordEntity {
 	
 	public WordEntity() {}
 
-	public WordEntity(String word, Language language, String category) {
-		this.word = word;
-		this.language = language;
-		this.category = category;
+	public WordEntity(Builder builder) {
+		this.word = builder.word;
+		this.language = builder.language;
+		this.category = builder.category;
 	}
 
 	public Long getId() {
@@ -68,4 +68,50 @@ public class WordEntity {
 		this.version = version;
 	}
 	
+	public static Builder builder(String word, Language language) {
+        return new Builder(word, language);
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static class Builder {
+
+        private String word;
+        private Language language;
+        private String category;
+
+        private Builder(String word, Language language) {
+            this.word = word;
+            this.language = language;
+        }
+
+        private Builder(WordEntity wordEntity) {
+            this.word = wordEntity.getWord();
+            this.language = wordEntity.getLanguage();
+            this.category = wordEntity.getCategory();
+        }
+
+        public Builder word(String word) {
+            this.word = word;
+            return this;
+        }
+        
+        public Builder language(Language language) {
+            this.language = language;
+            return this;
+        }
+
+        public Builder category(String category) {
+            this.category = category;
+            return this;
+        }
+        
+        public WordEntity build() {
+            return new WordEntity(this);
+        }
+
+    }
+    
 }
