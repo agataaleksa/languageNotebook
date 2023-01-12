@@ -15,7 +15,6 @@ public interface WordService {
     public WordResponseDTO getWordById(Long id);
     public List<WordEntity> getWords();
 	public void deleteWord(Long id);
-    public int checkIfWordExists(String word);
-	public int findWordsId(String word);
+	public void updateWord(Long id, WordRequestDTO requestDTO);
 
 }

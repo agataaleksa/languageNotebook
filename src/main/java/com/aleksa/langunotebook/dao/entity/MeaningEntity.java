@@ -27,7 +27,7 @@ public class MeaningEntity {
 	@Version
 	private Long version;
 	
-	public MeaningEntity() {}
+	protected MeaningEntity() {}
 
 	private MeaningEntity(Builder builder) {
         this.meaning = builder.meaning;
@@ -44,42 +44,18 @@ public class MeaningEntity {
 		return meaning;
 	}
 
-	public void setMeaning(String meaning) {
-		this.meaning = meaning;
-	}
-
 	public String getDescription() {
 		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public ExampleEntity getExample() {
 		return example;
 	}
 
-	public void setExample(ExampleEntity example) {
-		this.example = example;
-	}
-
 	public WordEntity getWord() {
 		return word;
 	}
 
-	public void setWord(WordEntity word) {
-		this.word = word;
-	}
-
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-	
 	public static Builder builder(String meaning, String description) {
         return new Builder(meaning, description);
     }

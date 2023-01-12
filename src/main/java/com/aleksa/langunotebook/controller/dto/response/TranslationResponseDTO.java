@@ -2,59 +2,33 @@ package com.aleksa.langunotebook.controller.dto.response;
 
 
 public class TranslationResponseDTO {
+	
 	private String meaning;
 	private String description;
 	private String word;
 	private String example;
-
-	public TranslationResponseDTO() {}
-
-	public TranslationResponseDTO(String meaning, String description, String word, String example) {
-		this.meaning = meaning;
-		this.description = description;
-		this.word = word;
-		this.example = example;
-	}
-
-	public String getMeaning() {
-		return meaning;
-	}
-
-	public void setMeaning(String meaning) {
-		this.meaning = meaning;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getWord() {
-		return word;
-	}
-
-	public void setWord(String word) {
-		this.word = word;
-	}
-
-	public String getExample() {
-		return example;
-	}
-
-	public void setExample(String example) {
-		this.example = example;
-	}
-	
-	//------ BUILDER ------
 	
 	private TranslationResponseDTO(Builder builder) {
 		this.meaning = builder.meaning;
 		this.description = builder.description;
 		this.word = builder.word;
 		this.example = builder.example;
+	}
+
+	public String getMeaning() {
+		return meaning;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getWord() {
+		return word;
+	}
+
+	public String getExample() {
+		return example;
 	}
 
 	public static Builder builder() {

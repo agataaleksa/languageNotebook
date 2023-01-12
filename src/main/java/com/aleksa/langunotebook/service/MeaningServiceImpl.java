@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,71 +13,66 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.aleksa.langunotebook.controller.dto.Language;
-import com.aleksa.langunotebook.controller.dto.Mapper;
 import com.aleksa.langunotebook.controller.dto.request.MeaningRequestDTO;
 import com.aleksa.langunotebook.controller.dto.request.TranslationRequestDTO;
 import com.aleksa.langunotebook.controller.dto.response.MeaningResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.MeaningResponseDTOFactory;
 import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTOFactory;
 import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
+import com.aleksa.langunotebook.controller.dto.response.WordResponseDTOFactory;
 import com.aleksa.langunotebook.dao.entity.ExampleEntity;
+import com.aleksa.langunotebook.dao.entity.ExampleEntityFactory;
 import com.aleksa.langunotebook.dao.entity.MeaningEntity;
+import com.aleksa.langunotebook.dao.entity.MeaningEntityFactory;
 import com.aleksa.langunotebook.dao.entity.WordEntity;
 import com.aleksa.langunotebook.exception.ResourceNotFoundException;
-import com.aleksa.langunotebook.exception.ValidationException;
 import com.aleksa.langunotebook.repository.MeaningRepository;
 
 @Service
+@Transactional
 public class MeaningServiceImpl implements MeaningService {
 	
 	private final MeaningRepository meaningRepository;
 	private final WordService wordService;
+	private final WordValidator wordValidator;
+	private final MeaningValidator meaningValidator;
+
 	
-	public MeaningServiceImpl(MeaningRepository meaningRepository, WordService wordService) {
+	public MeaningServiceImpl(MeaningRepository meaningRepository, WordService wordService, 
+			WordValidator wordValidator, MeaningValidator meaningValidator) {
 		this.meaningRepository = meaningRepository;
 		this.wordService = wordService;
+		this.wordValidator = wordValidator;
+		this.meaningValidator = meaningValidator;
 	}
 
 	@Override
 	public TranslationResponseDTO addTranslation(TranslationRequestDTO requestDTO) {
-		MeaningEntity meaning = new MeaningEntity();
-		meaning.setMeaning(requestDTO.getMeaning());
-		meaning.setDescription(requestDTO.getDescription());
-		WordEntity word = new WordEntity();
-		word.setWord(requestDTO.getWord().getWord());
-		word.setLanguage(requestDTO.getWord().getLanguage());
-		word.setCategory(requestDTO.getWord().getCategory());
-		meaning.setWord(word);
-		ExampleEntity example = new ExampleEntity();
-		example.setExample(requestDTO.getExample().getExample());
-		meaning.setExample(example);
+		MeaningEntity meaning = MeaningEntityFactory.create(requestDTO);
 
-		if(wordService.checkIfWordExists(requestDTO.getWord().getWord()) == 1) { 
-			throw new ValidationException(wordService.findWordsId(word.getWord())); }
+		wordValidator.validateWord(meaning.getWord().getWord());
 		meaningRepository.save(meaning);
-	    return Mapper.translationToTranslationDTO(meaning);
+	    return TranslationResponseDTOFactory.create(meaning);
 	}
 	
 	@Override
 	public MeaningResponseDTO addMeaningById(Long wordId, MeaningRequestDTO requestDTO) {
-		MeaningEntity meaning = new MeaningEntity();
-		meaning.setMeaning(requestDTO.getMeaning());
-		meaning.setDescription(requestDTO.getDescription());
-		ExampleEntity example = new ExampleEntity();
-		example.setExample(requestDTO.getExample().getExample());
-		meaning.setExample(example);
-		WordEntity word = wordService.getWord(wordId).get();
-		meaning.setWord(word);
+		Optional<WordEntity> word = wordService.getWord(wordId);
+		if (word.isEmpty()) { throw new ResourceNotFoundException("Word does not exist in the database."); }
 		
-		if(meaningRepository.checkIfMeaningExists(meaning.getMeaning(), word.getId()) == 1) { 
-			throw new ValidationException(); } 
-		MeaningEntity meaningToSave = meaningRepository.save(meaning);
-		return Mapper.meaningToMeaningDTO(meaningToSave);
+		ExampleEntity example = ExampleEntityFactory.create(requestDTO.getExample());
+		MeaningEntity meaning = MeaningEntityFactory.create(requestDTO, word.get(), example);
+		
+		meaningValidator.validateMeaning(meaning.getMeaning(), wordId);
+		meaningRepository.save(meaning);
+		return MeaningResponseDTOFactory.create(meaning);
 	}
 	
 	@Override
 	public TranslationResponseDTO addMeaning(String word, TranslationRequestDTO requestDTO) {
 		Optional<WordEntity> existingWord = wordService.getWords().stream()
-				.filter(w -> w.getWord().equals(word))
+				.filter(w -> w.getWord().equalsIgnoreCase(word))
                 .findFirst();
 		
 		if (existingWord.isEmpty()) { 
@@ -83,18 +80,10 @@ public class MeaningServiceImpl implements MeaningService {
 			return dto;
 			
 		} else {
-			MeaningEntity newMeaning = new MeaningEntity();
-			newMeaning.setMeaning(requestDTO.getMeaning());
-			newMeaning.setDescription(requestDTO.getDescription());
-			ExampleEntity example = new ExampleEntity();
-			example.setExample(requestDTO.getExample().getExample());
-			newMeaning.setExample(example);		
-			newMeaning.setWord(existingWord.get());
+			MeaningEntity newMeaning = MeaningEntityFactory.create(requestDTO, existingWord.get());
 			meaningRepository.save(newMeaning);
-		
-		TranslationResponseDTO dto =  Mapper.translationToTranslationDTO(newMeaning);
-		return dto;
-		}
+		    return TranslationResponseDTOFactory.create(newMeaning);
+		    }
 	}
 
 	public MeaningEntity getMeaning(Long id) {
@@ -107,32 +96,31 @@ public class MeaningServiceImpl implements MeaningService {
 		if(!meaningRepository.existsById(id)) {
 			  throw new ResourceNotFoundException();
 			}
-		
-		return Mapper.meaningToMeaningDTO(getMeaning(id));
+		return MeaningResponseDTOFactory.create(getMeaning(id));
 	}
 	
 	@Override
 	public List<MeaningResponseDTO> getMeaningsByWord(String word) {				
-		if(wordService.checkIfWordExists(word) == 0) { throw new ResourceNotFoundException(); }
+		wordValidator.findWord(word);
 		List<MeaningEntity> meanings = meaningRepository.findAll().stream()
 				.filter(m -> m.getWord().getWord().equals(word))
 				.collect(Collectors.toList());
 		
 		if (meanings.isEmpty()) { throw new ResourceNotFoundException(); }
 		 
-	    return Mapper.meaningsToMeaningDTO(meanings);  
+	    return MeaningResponseDTOFactory.create(meanings);
 	}
 	
 	@Override
     public WordResponseDTO getWordByMeaning(String meaning) {
 		Optional<MeaningEntity> meaningEntity = meaningRepository.findAll().stream()
-				.filter(m -> m.getMeaning().equals(meaning))
+				.filter(m -> m.getMeaning().equalsIgnoreCase(meaning))
 				.findFirst();
 		
 		if (meaningEntity.isEmpty()) { throw new ResourceNotFoundException(); }
 		WordEntity wordEntity = meaningEntity.get().getWord();
 
-		return Mapper.wordToWordResponseDTO(wordEntity);
+		return WordResponseDTOFactory.create(wordEntity);
 	}
 
 	@Override
@@ -140,19 +128,28 @@ public class MeaningServiceImpl implements MeaningService {
 		  Pageable paging = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.ASC, field));
 		  Page<MeaningEntity> pagedResult = meaningRepository.findAll(paging);
 		  
-		  return Mapper.translationsToTranslationDTO(pagedResult.getContent());
+		  return TranslationResponseDTOFactory.create(pagedResult.getContent());
 	}
 	
 	@Override
-	public List<MeaningResponseDTO> getTranslationsByLanguageAndCategory(Language language, String category) { 
-	List<MeaningEntity> sortedList = meaningRepository.findAll().stream()
-			.filter(m -> m.getWord().getCategory().equals(category))
-			.filter(m -> m.getWord().getLanguage().equals(language))
-			.collect(Collectors.toList());
+	public List<TranslationResponseDTO> getTranslationsByLanguage(Language language, int offset, int pageSize) { 
+		Pageable paging = PageRequest.of(offset, pageSize);
+		List<MeaningEntity> filteredTranslations = meaningRepository.filterByLanguage(language, paging);
+	 return TranslationResponseDTOFactory.create(filteredTranslations);
+	}
 	
-	if (sortedList.isEmpty()) { throw new ResourceNotFoundException("No translations meeting required criteria."); }
+	@Override
+	public List<TranslationResponseDTO> getTranslationsByCategory(String category, int offset, int pageSize) { 
+		Pageable paging = PageRequest.of(offset, pageSize);
+		List<MeaningEntity> filteredTranslations = meaningRepository.filterByCategory(category, paging);
+	 return TranslationResponseDTOFactory.create(filteredTranslations);
+	}
 	
-	return Mapper.meaningsToMeaningDTO(sortedList);
+	@Override
+	public List<TranslationResponseDTO> getTranslationsByLanguageAndCategory(Language language, String category, int offset, int pageSize) { 
+		Pageable paging = PageRequest.of(offset, pageSize);
+		List<MeaningEntity> filteredTranslations = meaningRepository.filterByLanguageAndCategory(language, category, paging);
+	 return TranslationResponseDTOFactory.create(filteredTranslations);
 	}
 
 	@Override
@@ -179,25 +176,20 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 
 	@Override
-	public void updateTranslation (Long id, TranslationRequestDTO requestDTO) {
-		MeaningEntity meaning = getMeaning(id);
-		if (meaning == null) { throw new ResourceNotFoundException(); }
-		
-		meaning.setMeaning(requestDTO.getMeaning());
-		meaning.setDescription(requestDTO.getDescription());
-		ExampleEntity example = new ExampleEntity();
-		example.setExample(requestDTO.getExample().getExample());
-		meaning.setExample(example);
-		WordEntity word = new WordEntity();
-		word.setWord(requestDTO.getWord().getWord());
-		word.setLanguage(requestDTO.getWord().getLanguage());
-		word.setCategory(requestDTO.getWord().getCategory());
-		meaning.setWord(word);
+	@Transactional
+	public void updateMeaning(Long id, MeaningRequestDTO requestDTO) {
+		MeaningEntity meaning = MeaningEntityFactory.update(getMeaning(id), requestDTO);
 		meaningRepository.save(meaning);
 	}
 	
-}
-
-
+	@Override
+    public MeaningResponseDTO deleteExampleFromTranslation(Long id) {
+        if (!meaningRepository.existsById(id)) {
+            throw new ResourceNotFoundException(); }
+        MeaningEntity meaning = getMeaning(id);
+        meaning = MeaningEntityFactory.clearExample(meaning);
+        return MeaningResponseDTOFactory.create(meaning);
+    }
 	
+}
 

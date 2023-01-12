@@ -5,7 +5,5 @@ public enum Language {
 	GERMAN, 
 	SPANISH, 
 	ITALIAN;
-	
-	Language() {}
-	
+		
 }

@@ -5,36 +5,23 @@ public class WordResponseDTO {
 
 	private Long id;
 	private String word;
-
-	public WordResponseDTO() {}
+	
+	private WordResponseDTO(Builder builder) {
+		this.id = builder.id;
+		this.word = builder.word;
+	}
 	
 	public WordResponseDTO(Long id, String word) {
 		this.id = id;
 		this.word = word;
-
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getWord() {
 		return word;
-	}
-	
-	public void setWord(String word) {
-		this.word = word;
-	}
-	
-	//------ BUILDER ------
-
-	private WordResponseDTO(Builder builder) {
-		this.id = builder.id;
-		this.word = builder.word;
 	}
 
 	public static Builder builder() {
@@ -61,6 +48,7 @@ public class WordResponseDTO {
 		public WordResponseDTO build() {
 			return new WordResponseDTO(this);
 		}
+		
 	}
 	
 }

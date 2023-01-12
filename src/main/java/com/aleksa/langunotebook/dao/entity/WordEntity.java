@@ -24,9 +24,9 @@ public class WordEntity {
     @Version
 	private Long version;
 	
-	public WordEntity() {}
+    protected WordEntity() {}
 
-	public WordEntity(Builder builder) {
+    private WordEntity(Builder builder) {
 		this.word = builder.word;
 		this.language = builder.language;
 		this.category = builder.category;
@@ -40,34 +40,14 @@ public class WordEntity {
 		return word;
 	}
 
-	public void setWord(String word) {
-		this.word = word;
-	}
-
 	public Language getLanguage() {
 		return language;
-	}
-
-	public void setLanguage(Language language) {
-		this.language = language;
 	}
 
 	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-	
 	public static Builder builder(String word, Language language) {
         return new Builder(word, language);
     }

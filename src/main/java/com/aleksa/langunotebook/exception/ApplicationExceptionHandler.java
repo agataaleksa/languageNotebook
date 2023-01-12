@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
 	
-	
-	// HANDLING VALIDATOR-ERRORS:
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, String> handleInvalidArgument(MethodArgumentNotValidException ex) {
@@ -37,4 +35,5 @@ public class ApplicationExceptionHandler {
 	public String ValidationHandler(ValidationException ex) {
 		return ex.getMessage();
 	}
+	
 }

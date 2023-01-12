@@ -23,11 +23,18 @@ public class MeaningEntityFactory {
                 .build();
     }
     
+    public static MeaningEntity create(TranslationRequestDTO translationRequestDTO, WordEntity wordEntity) {
+        return MeaningEntity.builder(translationRequestDTO.getMeaning(),translationRequestDTO.getDescription())
+                .example(ExampleEntityFactory.create(translationRequestDTO.getExample()))
+                .word(wordEntity)
+                .build();
+    }
+    
     public static MeaningEntity update(MeaningEntity meaningEntity,
-            MeaningRequestDTO meaningUpdateRequestDTO) {
+            MeaningRequestDTO meaningRequestDTO) {
     	return meaningEntity.toBuilder()
-    			.meaning(meaningUpdateRequestDTO.getMeaning())
-    			.description(meaningUpdateRequestDTO.getDescription())
+    			.meaning(meaningRequestDTO.getMeaning())
+    			.description(meaningRequestDTO.getDescription())
     			.build();
 }
 

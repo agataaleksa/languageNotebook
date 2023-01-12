@@ -14,14 +14,16 @@ public interface MeaningService {
 	
     public TranslationResponseDTO addTranslation(TranslationRequestDTO requestDTO);
     public MeaningResponseDTO addMeaningById(Long wordId, MeaningRequestDTO requestDTO);	
-	public TranslationResponseDTO addMeaning(String word, TranslationRequestDTO requestDTO);
+    public TranslationResponseDTO addMeaning(String word, TranslationRequestDTO requestDTO);
 	public MeaningResponseDTO getMeaningById(Long id);
 	public List<MeaningResponseDTO> getMeaningsByWord(String word);
     public WordResponseDTO getWordByMeaning(String meaning);
 	public List<TranslationResponseDTO> getTranslations(int offset, int pageSize, String field);
- 	public List<MeaningResponseDTO> getTranslationsByLanguageAndCategory(Language language, String category); 
+	public List<TranslationResponseDTO> getTranslationsByLanguage(Language language, int offset, int pageSize);
+	public List<TranslationResponseDTO> getTranslationsByCategory(String category, int offset, int pageSize);
+	public List<TranslationResponseDTO> getTranslationsByLanguageAndCategory(Language language, String category, int offset, int pageSize);
 	public void deleteMeaning(Long id);
 	public void deleteTranslation(Long id);
-	public void updateTranslation (Long id, TranslationRequestDTO requestDTO);
-	
+    public MeaningResponseDTO deleteExampleFromTranslation(Long id);
+	public void updateMeaning(Long id, MeaningRequestDTO requestDTO);
 }

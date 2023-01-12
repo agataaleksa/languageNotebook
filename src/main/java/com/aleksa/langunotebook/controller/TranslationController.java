@@ -57,14 +57,14 @@ public class TranslationController {
 	public ResponseEntity<MeaningResponseDTO> addMeaningById(@PathVariable Long wordId, @Valid @RequestBody final MeaningRequestDTO requestDTO) {
 		return new ResponseEntity<>(meaningService.addMeaningById(wordId, requestDTO), HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("/meaning/{word}")
-	public ResponseEntity<TranslationResponseDTO> addMeaningByWord(@Valid @PathVariable String word, @Valid @RequestBody final TranslationRequestDTO requestDTO) {
+	public ResponseEntity<TranslationResponseDTO> addMeaningByWord(@PathVariable String word, @Valid @RequestBody final TranslationRequestDTO requestDTO) {
 		return new ResponseEntity<>(meaningService.addMeaning(word, requestDTO), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/meaning/{id}")
-	public ResponseEntity<MeaningResponseDTO> getMeaningById(@Valid @PathVariable Long id) {
+	public ResponseEntity<MeaningResponseDTO> getMeaningById(@PathVariable Long id) {
 		return new ResponseEntity<>(meaningService.getMeaningById(id), HttpStatus.ACCEPTED);
 	}
 
@@ -84,33 +84,58 @@ public class TranslationController {
 		  return new ResponseEntity<>(meaningService.getTranslations(offset, pageSize, field), HttpStatus.ACCEPTED);
 	  }
 
-	@GetMapping("/translations/filterBy")
-	public ResponseEntity<List<MeaningResponseDTO>> getTranslationsByLanguageAndCategory
-	                          (@Valid @RequestParam(value="language", required = true) Language language, @Valid @RequestParam(value="category", required = false) String category) {
-		return new ResponseEntity<>(meaningService.getTranslationsByLanguageAndCategory(language, category), HttpStatus.ACCEPTED);
+	@GetMapping("translations/filter-by-language")
+	public ResponseEntity<List<TranslationResponseDTO>> getTranslationsByLanguage(@Valid @RequestParam(required = true) Language language,
+			@Valid @RequestParam(defaultValue = "0") int offset, @Valid @RequestParam(defaultValue = "10") int pageSize) {
+		return new ResponseEntity<>(meaningService.getTranslationsByLanguage(language, offset, pageSize), HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/translations/filter-by-category")
+	public ResponseEntity<List<TranslationResponseDTO>> getTranslationsByCategory(@Valid @RequestParam(required = true) String category, 
+			@Valid @RequestParam(defaultValue = "0") int offset, @Valid @RequestParam(defaultValue = "10") int pageSize) {
+		return new ResponseEntity<>(meaningService.getTranslationsByCategory(category, offset, pageSize), HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/translations/filter")
+	public ResponseEntity<List<TranslationResponseDTO>> getTranslationsByLanguage(@Valid @RequestParam(required = true) Language language,
+			@Valid @RequestParam(required = true) String category, @Valid @RequestParam(defaultValue = "0") int offset, 
+			@Valid @RequestParam(defaultValue = "10") int pageSize) {
+		return new ResponseEntity<>(meaningService.getTranslationsByLanguageAndCategory(language, category, offset, pageSize), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/meaning/{id}")
-    public ResponseEntity<Void> deleteMeaningById(@Valid @PathVariable Long id) {
+    public ResponseEntity<Void> deleteMeaningById(@PathVariable Long id) {
 		meaningService.deleteMeaning(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/translation/{id}")
-	public ResponseEntity<Void> deleteTranslationById(@Valid @PathVariable Long id) {
+	public ResponseEntity<Void> deleteTranslationById(@PathVariable Long id) {
 		meaningService.deleteTranslation(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@DeleteMapping("/example/{id}")
+    public ResponseEntity<MeaningResponseDTO> deleteExampleById(@PathVariable Long id) {
+		return new ResponseEntity<>(meaningService.deleteExampleFromTranslation(id), HttpStatus.ACCEPTED);
+	}
 
-	@PutMapping("/translation/{id}")
-	public ResponseEntity<Void> updateTranslation(@Valid @PathVariable Long id, @Valid @RequestBody final TranslationRequestDTO requestDTO) {
-		meaningService.updateTranslation(id, requestDTO);
+	@PutMapping("/meaning/{id}")
+	public ResponseEntity<Void> updateMeaning(@PathVariable Long id, @Valid @RequestBody final MeaningRequestDTO requestDTO) {
+		meaningService.updateMeaning(id, requestDTO);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("/word/{id}")
+	public ResponseEntity<Void> updateWord(@PathVariable Long id, @Valid @RequestBody final WordRequestDTO requestDTO) {
+		wordService.updateWord(id, requestDTO);
 		return ResponseEntity.ok().build();
 	}
 
 	@PutMapping("/example/{id}")
-	public ResponseEntity<Void> updateExampleById(@PathVariable Long id, @Valid @RequestBody final ExampleRequestDTO requestDTO) {
+	public ResponseEntity<Void> updateExample(@PathVariable Long id, @Valid @RequestBody final ExampleRequestDTO requestDTO) {
 		exampleService.updateExampleById(id, requestDTO);
 		return ResponseEntity.ok().build();
 	}
+	
 }

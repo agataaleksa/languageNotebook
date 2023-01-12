@@ -5,14 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
+import javax.transaction.Transactional;
 
-import com.aleksa.langunotebook.controller.dto.Language;
-import com.aleksa.langunotebook.dao.entity.WordEntity.Builder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-
+@Transactional
 public class ExampleEntity {
 	
 	@Id
@@ -22,9 +21,9 @@ public class ExampleEntity {
 	@Version
 	private Long version;
 	
-	public ExampleEntity() {}
+	protected ExampleEntity() {}
 	
-	public ExampleEntity(Builder builder) {
+	private ExampleEntity(Builder builder) {
 		this.example = builder.example;
 	}
 
@@ -39,19 +38,11 @@ public class ExampleEntity {
 	public String getExample() {
 		return example;
 	}
-
+	
 	public void setExample(String example) {
 		this.example = example;
 	}
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-	
 	public static Builder builder(String example) {
         return new Builder(example);
     }
@@ -72,7 +63,7 @@ public class ExampleEntity {
             this.example = exampleEntity.getExample();
         }
 
-        public Builder word(String example) {
+        public Builder example(String example) {
             this.example = example;
             return this;
         }
@@ -82,5 +73,5 @@ public class ExampleEntity {
         }
 
     }
-
+ 
 }

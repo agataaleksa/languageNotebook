@@ -8,14 +8,15 @@ public class ExampleEntityFactory {
     }
 
     public static ExampleEntity create(ExampleRequestDTO exampleRequestDTO) {
-        return ExampleEntity.builder(exampleRequestDTO.getExample())
-        		.build();
+        return new ExampleEntity(exampleRequestDTO.getExample());
     }
    
     public static ExampleEntity update(ExampleEntity exampleEntity, ExampleRequestDTO exampleRequestDTO) {
-    	return exampleEntity.toBuilder()
-    			.word(exampleRequestDTO.getExample())
-    			.build();
+    	exampleEntity.setExample(exampleRequestDTO.getExample());
+    	return exampleEntity;
+//    	return exampleEntity.toBuilder()
+//    			.example(exampleRequestDTO.getExample())
+//    			.build();
     }
     
 }
