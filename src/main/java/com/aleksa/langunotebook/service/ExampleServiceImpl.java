@@ -1,6 +1,7 @@
 package com.aleksa.langunotebook.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aleksa.langunotebook.controller.dto.request.ExampleRequestDTO;
 import com.aleksa.langunotebook.controller.dto.response.ExampleResponseDTO;
@@ -11,6 +12,7 @@ import com.aleksa.langunotebook.exception.ResourceNotFoundException;
 import com.aleksa.langunotebook.repository.ExampleRepository;
 
 @Service
+@Transactional
 public class ExampleServiceImpl implements ExampleService {
 
 	

@@ -3,7 +3,8 @@ package com.aleksa.langunotebook.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,6 @@ import com.aleksa.langunotebook.exception.ResourceNotFoundException;
 import com.aleksa.langunotebook.repository.WordRepository;
 
 @Service
-@Transactional
 public class WordServiceImpl implements WordService {
 	
 	private final WordRepository wordRepository;
@@ -61,7 +61,7 @@ public class WordServiceImpl implements WordService {
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void updateWord(Long id, WordRequestDTO requestDTO) {
 		WordEntity word = wordRepository.findById(id).orElseThrow(ResourceNotFoundException::new);	
 		if(!wordRepository.existsById(id)) {
