@@ -27,4 +27,5 @@ public interface MeaningRepository extends JpaRepository<MeaningEntity, Long> {
 
     @Query(value = "SELECT me FROM MeaningEntity me ORDER BY RAND()")
 	public List<MeaningEntity> getMeaningsShuffled();
+   
 }

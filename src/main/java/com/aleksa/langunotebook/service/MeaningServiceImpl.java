@@ -1,10 +1,14 @@
 package com.aleksa.langunotebook.service;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -196,6 +200,28 @@ public class MeaningServiceImpl implements MeaningService {
         MeaningEntity meaning = getMeaning(id);
         meaning = MeaningEntityFactory.clearExample(meaning);
         return MeaningResponseDTOFactory.create(meaning);
+    }
+	
+	public void saveTranslationsToFileFilterByLanguage(Language language, Writer writer) {
+
+        List<MeaningEntity> meanings = meaningRepository.filterByLanguage(language, null);
+        try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+            for (MeaningEntity meaning : meanings) {
+                csvPrinter.printRecord(meaning.getWord().getWord(), meaning.getMeaning(), meaning.getDescription(), meaning.getExample().getExample());            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	public void saveTranslationsToFileFilterByLanguageAndCategory(Language language, String category, Writer writer) {
+
+        List<MeaningEntity> meanings = meaningRepository.filterByLanguageAndCategory(language, category, null);
+        try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+            for (MeaningEntity meaning : meanings) {
+                csvPrinter.printRecord(meaning.getWord().getWord(), meaning.getMeaning(), meaning.getDescription(), meaning.getExample().getExample());            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 	
 }

@@ -1,7 +1,9 @@
 package com.aleksa.langunotebook.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -138,4 +140,18 @@ public class TranslationController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@GetMapping("/saveByLanguage")
+    public void saveToFileByLanguage(@Valid @RequestParam(required = true) Language language, HttpServletResponse servletResponse) throws IOException {
+        servletResponse.setContentType("text/csv");
+        servletResponse.addHeader("Content-Disposition","attachment; filename=\"translations-" + language +".csv\"");
+        meaningService.saveTranslationsToFileFilterByLanguage(language, servletResponse.getWriter());
+    }
+	
+	@GetMapping("/saveByLanguageAndCategory")
+    public void saveToFileByLanguageAndCategory(@Valid @RequestParam(required = true) Language language, 
+    		@Valid @RequestParam(required = true) String category, HttpServletResponse servletResponse) throws IOException {
+        servletResponse.setContentType("text/csv");
+        servletResponse.addHeader("Content-Disposition","attachment; filename=\"translations-" + language + "-" + category + ".csv\"");
+        meaningService.saveTranslationsToFileFilterByLanguage(language, servletResponse.getWriter());
+    }
 }
