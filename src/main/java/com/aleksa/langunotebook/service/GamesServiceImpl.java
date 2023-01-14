@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,6 +34,7 @@ public class GamesServiceImpl implements GamesService {
 	}
 	
 	@Override
+	@Cacheable(cacheNames = "learnWithFlashcards")
 	public List<GamesResponseDTO> learnWithFlashcards(int numberOfMeanings)  {
 		List<MeaningEntity> randomMeanings = new ArrayList<>(meaningRepository.getMeaningsShuffled());
 		List<MeaningEntity> chosenMeanings = new ArrayList<>();
@@ -51,6 +53,7 @@ public class GamesServiceImpl implements GamesService {
 	}
 
 	@Override
+	@Cacheable(cacheNames = "guessEnglishWordBySynonym")
 	public SynonymResponseDTO guessEnglishWordBySynonym (String word) {
 		    String wordUrl = URL + word;
 		    WordEntity wordEntity = wordRepository.findWordByWord(word);

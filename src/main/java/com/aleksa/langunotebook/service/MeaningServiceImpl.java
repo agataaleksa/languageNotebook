@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -92,6 +92,7 @@ public class MeaningServiceImpl implements MeaningService {
     }
 	
 	@Override
+	@Cacheable(cacheNames = "getMeaningById")
 	public MeaningResponseDTO getMeaningById(Long id) {
 		if(!meaningRepository.existsById(id)) {
 			  throw new ResourceNotFoundException();
@@ -100,6 +101,7 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 	
 	@Override
+	@Cacheable("getMeaningsByWord")
 	public List<MeaningResponseDTO> getMeaningsByWord(String word) {				
 		wordValidator.findWord(word);
 		List<MeaningEntity> meanings = meaningRepository.findAll().stream()
@@ -112,6 +114,7 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 	
 	@Override
+	@Cacheable(cacheNames = "getWordByMeaning")
     public WordResponseDTO getWordByMeaning(String meaning) {
 		Optional<MeaningEntity> meaningEntity = meaningRepository.findAll().stream()
 				.filter(m -> m.getMeaning().equalsIgnoreCase(meaning))
@@ -124,6 +127,7 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 
 	@Override
+	@Cacheable(cacheNames = "getTranslations")
 	public List<TranslationResponseDTO> getTranslations(int offset, int pageSize, String field) {
 		  Pageable paging = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.ASC, field));
 		  Page<MeaningEntity> pagedResult = meaningRepository.findAll(paging);
@@ -132,6 +136,7 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 	
 	@Override
+	@Cacheable(cacheNames = "getTranslationsByLanguage")
 	public List<TranslationResponseDTO> getTranslationsByLanguage(Language language, int offset, int pageSize) { 
 		Pageable paging = PageRequest.of(offset, pageSize);
 		List<MeaningEntity> filteredTranslations = meaningRepository.filterByLanguage(language, paging);
@@ -139,6 +144,7 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 	
 	@Override
+	@Cacheable(cacheNames = "getTranslationsByCategory")
 	public List<TranslationResponseDTO> getTranslationsByCategory(String category, int offset, int pageSize) { 
 		Pageable paging = PageRequest.of(offset, pageSize);
 		List<MeaningEntity> filteredTranslations = meaningRepository.filterByCategory(category, paging);
@@ -146,6 +152,7 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 	
 	@Override
+	@Cacheable(cacheNames = "getTranslationsByLanguageAndCategory")
 	public List<TranslationResponseDTO> getTranslationsByLanguageAndCategory(Language language, String category, int offset, int pageSize) { 
 		Pageable paging = PageRequest.of(offset, pageSize);
 		List<MeaningEntity> filteredTranslations = meaningRepository.filterByLanguageAndCategory(language, category, paging);
