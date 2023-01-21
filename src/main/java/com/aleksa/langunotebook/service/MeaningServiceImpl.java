@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -25,12 +26,12 @@ import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTO;
 import com.aleksa.langunotebook.controller.dto.response.TranslationResponseDTOFactory;
 import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
 import com.aleksa.langunotebook.controller.dto.response.WordResponseDTOFactory;
-import com.aleksa.langunotebook.dao.entity.ExampleEntity;
-import com.aleksa.langunotebook.dao.entity.ExampleEntityFactory;
-import com.aleksa.langunotebook.dao.entity.MeaningEntity;
-import com.aleksa.langunotebook.dao.entity.MeaningEntityFactory;
-import com.aleksa.langunotebook.dao.entity.WordEntity;
 import com.aleksa.langunotebook.exception.ResourceNotFoundException;
+import com.aleksa.langunotebook.model.ExampleEntity;
+import com.aleksa.langunotebook.model.ExampleEntityFactory;
+import com.aleksa.langunotebook.model.MeaningEntity;
+import com.aleksa.langunotebook.model.MeaningEntityFactory;
+import com.aleksa.langunotebook.model.WordEntity;
 import com.aleksa.langunotebook.repository.MeaningRepository;
 
 @Service
@@ -187,7 +188,7 @@ public class MeaningServiceImpl implements MeaningService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public void updateMeaning(Long id, MeaningRequestDTO requestDTO) {
 		MeaningEntity meaning = MeaningEntityFactory.update(getMeaning(id), requestDTO);
 		meaningRepository.save(meaning);

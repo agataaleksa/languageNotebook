@@ -1,7 +1,7 @@
 package com.aleksa.langunotebook.controller.dto.response;
 
 
-import com.aleksa.langunotebook.dao.entity.WordEntity;
+import com.aleksa.langunotebook.model.WordEntity;
 
 public class SynonymResponseDTOFactory {
 	

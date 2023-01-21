@@ -2,6 +2,8 @@ package com.aleksa.langunotebook.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,8 @@ import com.aleksa.langunotebook.controller.dto.response.SynonymResponseDTO;
 import com.aleksa.langunotebook.service.GamesService;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
+@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 @RequestMapping("/api/games")
 public class GamesController {
 

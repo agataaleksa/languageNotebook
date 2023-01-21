@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.aleksa.langunotebook.controller.dto.request.WordRequestDTO;
 import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
-import com.aleksa.langunotebook.dao.entity.WordEntity;
+import com.aleksa.langunotebook.model.WordEntity;
 
 
 public interface WordService {

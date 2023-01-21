@@ -1,18 +1,18 @@
 package com.aleksa.langunotebook.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aleksa.langunotebook.controller.dto.request.ExampleRequestDTO;
 import com.aleksa.langunotebook.controller.dto.response.ExampleResponseDTO;
 import com.aleksa.langunotebook.controller.dto.response.ExampleResponseDTOFactory;
-import com.aleksa.langunotebook.dao.entity.ExampleEntity;
-import com.aleksa.langunotebook.dao.entity.ExampleEntityFactory;
 import com.aleksa.langunotebook.exception.ResourceNotFoundException;
+import com.aleksa.langunotebook.model.ExampleEntity;
+import com.aleksa.langunotebook.model.ExampleEntityFactory;
 import com.aleksa.langunotebook.repository.ExampleRepository;
 
 @Service
-@Transactional
 public class ExampleServiceImpl implements ExampleService {
 
 	
@@ -29,6 +29,7 @@ public class ExampleServiceImpl implements ExampleService {
 	}
 	
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void updateExampleById(Long id, ExampleRequestDTO requestDTO) {
 	   ExampleEntity example = exampleRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
 	   exampleRepository.save(ExampleEntityFactory.update(example, requestDTO));

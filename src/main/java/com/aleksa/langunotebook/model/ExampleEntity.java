@@ -1,4 +1,4 @@
-package com.aleksa.langunotebook.dao.entity;
+package com.aleksa.langunotebook.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,10 +37,6 @@ public class ExampleEntity {
 
 	public String getExample() {
 		return example;
-	}
-	
-	public void setExample(String example) {
-		this.example = example;
 	}
 
 	public static Builder builder(String example) {

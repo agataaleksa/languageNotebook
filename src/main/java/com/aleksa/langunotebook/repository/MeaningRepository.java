@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.aleksa.langunotebook.controller.dto.Language;
-import com.aleksa.langunotebook.dao.entity.MeaningEntity;
+import com.aleksa.langunotebook.model.MeaningEntity;
 
 @Repository
 public interface MeaningRepository extends JpaRepository<MeaningEntity, Long> {
@@ -26,6 +26,6 @@ public interface MeaningRepository extends JpaRepository<MeaningEntity, Long> {
 	public List<MeaningEntity> filterByLanguageAndCategory(Language language, String category, Pageable pageable);
 
     @Query(value = "SELECT me FROM MeaningEntity me ORDER BY RAND()")
-	public List<MeaningEntity> getMeaningsShuffled();
+	public List<MeaningEntity> getMeaningsShuffled(Pageable pageable);
    
 }

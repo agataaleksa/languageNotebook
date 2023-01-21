@@ -1,4 +1,4 @@
-package com.aleksa.langunotebook.dao.entity;
+package com.aleksa.langunotebook.model;
 
 import com.aleksa.langunotebook.controller.dto.request.WordRequestDTO;
 

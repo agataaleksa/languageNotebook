@@ -3,7 +3,7 @@ package com.aleksa.langunotebook.controller.dto.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.aleksa.langunotebook.dao.entity.MeaningEntity;
+import com.aleksa.langunotebook.model.MeaningEntity;
 
 public class MeaningResponseDTOFactory {
 	

@@ -1,10 +1,10 @@
 package com.aleksa.langunotebook.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,8 +13,8 @@ import com.aleksa.langunotebook.controller.dto.response.GamesResponseDTO;
 import com.aleksa.langunotebook.controller.dto.response.GamesResponseDTOFactory;
 import com.aleksa.langunotebook.controller.dto.response.SynonymResponseDTO;
 import com.aleksa.langunotebook.controller.dto.response.SynonymResponseDTOFactory;
-import com.aleksa.langunotebook.dao.entity.MeaningEntity;
-import com.aleksa.langunotebook.dao.entity.WordEntity;
+import com.aleksa.langunotebook.model.MeaningEntity;
+import com.aleksa.langunotebook.model.WordEntity;
 import com.aleksa.langunotebook.repository.MeaningRepository;
 import com.aleksa.langunotebook.repository.WordRepository;
 
@@ -36,20 +36,10 @@ public class GamesServiceImpl implements GamesService {
 	@Override
 	@Cacheable(cacheNames = "learnWithFlashcards")
 	public List<GamesResponseDTO> learnWithFlashcards(int numberOfMeanings)  {
-		List<MeaningEntity> randomMeanings = new ArrayList<>(meaningRepository.getMeaningsShuffled());
-		List<MeaningEntity> chosenMeanings = new ArrayList<>();
-		int count = 0;
-		Random rand = new Random();
-		MeaningEntity random;
+		Pageable paging = PageRequest.of(0, numberOfMeanings);
+		List<MeaningEntity> randomMeanings = meaningRepository.getMeaningsShuffled(paging);
 
-		while (count < numberOfMeanings) {
-			random = randomMeanings.get(rand.nextInt(randomMeanings.size()));
-			chosenMeanings.add(random);
-			randomMeanings.remove(random);
-			count++;
-		}
-		
-		return GamesResponseDTOFactory.create(chosenMeanings);
+		return GamesResponseDTOFactory.create(randomMeanings);
 	}
 
 	@Override

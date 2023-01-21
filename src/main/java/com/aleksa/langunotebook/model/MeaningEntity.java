@@ -1,4 +1,4 @@
-package com.aleksa.langunotebook.dao.entity;
+package com.aleksa.langunotebook.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,6 +30,7 @@ public class MeaningEntity {
 	protected MeaningEntity() {}
 
 	private MeaningEntity(Builder builder) {
+		this.id = builder.id;
         this.meaning = builder.meaning;
         this.description = builder.description;
         this.example = builder.example;
@@ -59,6 +60,10 @@ public class MeaningEntity {
 	public static Builder builder(String meaning, String description) {
         return new Builder(meaning, description);
     }
+	
+	public static Builder builder(Long id, String meaning, String description) {
+        return new Builder(id, meaning, description);
+    }
 
     public Builder toBuilder() {
         return new Builder(this);
@@ -66,6 +71,7 @@ public class MeaningEntity {
 
     public static class Builder {
 
+    	private Long id;
         private String meaning;
         private String description;
         private ExampleEntity example;
@@ -75,12 +81,24 @@ public class MeaningEntity {
             this.meaning = meaning;
             this.description = description;
         }
+        
+        private Builder(Long id, String meaning, String description) {
+        	this.id = id;
+            this.meaning = meaning;
+            this.description = description;
+        }
 
         private Builder(MeaningEntity meaningEntity) {
+        	this.id = meaningEntity.getId();
             this.meaning = meaningEntity.getMeaning();
             this.description = meaningEntity.getDescription();
             this.example = meaningEntity.getExample();
             this.word = meaningEntity.getWord();
+        }
+        
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
         }
 
         public Builder meaning(String meaning) {

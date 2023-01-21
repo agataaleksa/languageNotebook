@@ -1,4 +1,4 @@
-package com.aleksa.langunotebook.dao.entity;
+package com.aleksa.langunotebook.model;
 
 import com.aleksa.langunotebook.controller.dto.request.ExampleRequestDTO;
 
@@ -12,11 +12,9 @@ public class ExampleEntityFactory {
     }
    
     public static ExampleEntity update(ExampleEntity exampleEntity, ExampleRequestDTO exampleRequestDTO) {
-    	exampleEntity.setExample(exampleRequestDTO.getExample());
-    	return exampleEntity;
-//    	return exampleEntity.toBuilder()
-//    			.example(exampleRequestDTO.getExample())
-//    			.build();
+    	return exampleEntity.toBuilder()
+    			.example(exampleRequestDTO.getExample())
+    			.build();
     }
     
 }

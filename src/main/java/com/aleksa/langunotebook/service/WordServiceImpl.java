@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 import com.aleksa.langunotebook.controller.dto.request.WordRequestDTO;
 import com.aleksa.langunotebook.controller.dto.response.WordResponseDTO;
 import com.aleksa.langunotebook.controller.dto.response.WordResponseDTOFactory;
-import com.aleksa.langunotebook.dao.entity.WordEntity;
-import com.aleksa.langunotebook.dao.entity.WordEntityFactory;
 import com.aleksa.langunotebook.exception.ResourceNotFoundException;
+import com.aleksa.langunotebook.model.WordEntity;
+import com.aleksa.langunotebook.model.WordEntityFactory;
 import com.aleksa.langunotebook.repository.WordRepository;
 
 @Service
+@Transactional
 public class WordServiceImpl implements WordService {
 	
 	private final WordRepository wordRepository;
@@ -60,7 +61,7 @@ public class WordServiceImpl implements WordService {
 	}
 	
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updateWord(Long id, WordRequestDTO requestDTO) {
 		WordEntity word = wordRepository.findById(id).orElseThrow(ResourceNotFoundException::new);	
 		if(!wordRepository.existsById(id)) {
