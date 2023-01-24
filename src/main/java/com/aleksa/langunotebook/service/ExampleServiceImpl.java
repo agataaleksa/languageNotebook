@@ -1,5 +1,6 @@
 package com.aleksa.langunotebook.service;
 
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,8 @@ public class ExampleServiceImpl implements ExampleService {
 	}
 	
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY)
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@CachePut(value = "exampleUpdate")
 	public void updateExampleById(Long id, ExampleRequestDTO requestDTO) {
 	   ExampleEntity example = exampleRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
 	   exampleRepository.save(ExampleEntityFactory.update(example, requestDTO));

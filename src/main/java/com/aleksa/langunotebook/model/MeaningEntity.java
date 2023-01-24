@@ -31,6 +31,7 @@ public class MeaningEntity {
 
 	private MeaningEntity(Builder builder) {
 		this.id = builder.id;
+		this.version = builder.version;
         this.meaning = builder.meaning;
         this.description = builder.description;
         this.example = builder.example;
@@ -60,10 +61,6 @@ public class MeaningEntity {
 	public static Builder builder(String meaning, String description) {
         return new Builder(meaning, description);
     }
-	
-	public static Builder builder(Long id, String meaning, String description) {
-        return new Builder(id, meaning, description);
-    }
 
     public Builder toBuilder() {
         return new Builder(this);
@@ -72,6 +69,7 @@ public class MeaningEntity {
     public static class Builder {
 
     	private Long id;
+    	private Long version;
         private String meaning;
         private String description;
         private ExampleEntity example;
@@ -82,14 +80,9 @@ public class MeaningEntity {
             this.description = description;
         }
         
-        private Builder(Long id, String meaning, String description) {
-        	this.id = id;
-            this.meaning = meaning;
-            this.description = description;
-        }
-
         private Builder(MeaningEntity meaningEntity) {
         	this.id = meaningEntity.getId();
+        	this.version = meaningEntity.version;
             this.meaning = meaningEntity.getMeaning();
             this.description = meaningEntity.getDescription();
             this.example = meaningEntity.getExample();

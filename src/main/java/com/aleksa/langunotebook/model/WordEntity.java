@@ -27,6 +27,8 @@ public class WordEntity {
     protected WordEntity() {}
 
     private WordEntity(Builder builder) {
+    	this.id = builder.id;
+    	this.version = builder.version;
 		this.word = builder.word;
 		this.language = builder.language;
 		this.category = builder.category;
@@ -58,6 +60,8 @@ public class WordEntity {
 
     public static class Builder {
 
+    	private Long id;
+    	private Long version;
         private String word;
         private Language language;
         private String category;
@@ -68,6 +72,8 @@ public class WordEntity {
         }
 
         private Builder(WordEntity wordEntity) {
+        	this.id = wordEntity.getId();
+        	this.version = wordEntity.version;
             this.word = wordEntity.getWord();
             this.language = wordEntity.getLanguage();
             this.category = wordEntity.getCategory();

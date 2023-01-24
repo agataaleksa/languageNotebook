@@ -24,6 +24,8 @@ public class ExampleEntity {
 	protected ExampleEntity() {}
 	
 	private ExampleEntity(Builder builder) {
+		this.id = builder.id;
+		this.version = builder.version;
 		this.example = builder.example;
 	}
 
@@ -49,6 +51,8 @@ public class ExampleEntity {
 
     public static class Builder {
 
+    	private Long id;
+    	private Long version;
         private String example;
         
         private Builder(String example) {
@@ -56,6 +60,8 @@ public class ExampleEntity {
         }
 
         private Builder(ExampleEntity exampleEntity) {
+        	this.id = exampleEntity.getId();
+        	this.version = exampleEntity.version;
             this.example = exampleEntity.getExample();
         }
 

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -189,6 +190,7 @@ public class MeaningServiceImpl implements MeaningService {
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS)
+	@CachePut(value = "meaningUpdate")
 	public void updateMeaning(Long id, MeaningRequestDTO requestDTO) {
 		MeaningEntity meaning = MeaningEntityFactory.update(getMeaning(id), requestDTO);
 		meaningRepository.save(meaning);

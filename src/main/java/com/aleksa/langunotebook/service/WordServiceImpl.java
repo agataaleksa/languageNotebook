@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import com.aleksa.langunotebook.controller.dto.request.WordRequestDTO;
@@ -61,7 +62,8 @@ public class WordServiceImpl implements WordService {
 	}
 	
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@CachePut(value = "wordUpdate")
 	public void updateWord(Long id, WordRequestDTO requestDTO) {
 		WordEntity word = wordRepository.findById(id).orElseThrow(ResourceNotFoundException::new);	
 		if(!wordRepository.existsById(id)) {
@@ -70,7 +72,6 @@ public class WordServiceImpl implements WordService {
 		WordEntity updatedWord = WordEntityFactory.update(word, requestDTO);
 		wordRepository.save(updatedWord);
 	}
-	
 	
 }
 						
